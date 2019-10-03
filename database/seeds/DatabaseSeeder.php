@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 		$u->phone = rand(1000000000,10000000000);
 		$u->save();
 
-		for ($i=0; $i < 3; $i++)
+		for ($i=0; $i < 20; $i++)
 		{
 			$r = new Restaurant();
 			$r->name = 'restaurant_' . Str::random(4);
@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
 		$u->save();
 
 		$r = Restaurant::find(rand(1,3));
-		$r_products = $r->products();
+		$r_products = $r->products;
 
 		$o = new Order;
 		$o->restaurant_id = $r->id;

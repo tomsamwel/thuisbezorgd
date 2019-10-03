@@ -14,7 +14,17 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        //
+        return view('restaurant.index');
+    }
+
+
+	public function search(Request $request)
+    {
+		$search = $request->get('term');
+
+		$result = Restaurant::where('name', 'LIKE', '%'. $search. '%')->get();
+
+		return response()->json($result);
     }
 
     /**

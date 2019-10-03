@@ -8,6 +8,11 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import $ from 'jquery';
+window.$ = window.jQuery = $;
+
+import 'jquery-ui/ui/widgets/autocomplete.js';
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -29,4 +34,29 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+});
+
+
+$(document).ready(function() {
+	$( "#search" ).autocomplete({
+
+		source: function(request, response) {
+			$.ajax({
+			url: "http://localhost/thuisbezorgd/public/autocomplete",
+			data: {
+					term : request.term
+			 },
+			dataType: "json",
+			success: function(data){
+			   var resp = $.map(data,function(obj){
+					//console.log(obj.city_name);
+					return obj.name;
+			   });
+
+			   response(resp);
+			}
+		});
+	},
+	minLength: 1
+ });
 });
