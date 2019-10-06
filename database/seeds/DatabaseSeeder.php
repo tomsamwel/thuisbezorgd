@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
 				$p->name = $r->name . '_product_' . rand(0,10);
 				$p->price = rand(1,30). '99';
 				$p->category = rand(1,3);
+				$p->photo = 'product.jpeg';
 
 				$r->products()->save($p);
 			}

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
 {
+	protected $attributes = [
+        'photo' => 'restaurant.jpeg',
+    ];
 	public function products()
     {
         return $this->hasMany('App\Product');

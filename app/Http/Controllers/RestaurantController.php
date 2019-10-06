@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Restaurant;
+use App\Product;
 use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
@@ -57,7 +58,11 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        //
+		$products = $restaurant->products;
+        return view('restaurant.view', [
+			'restaurant' => $restaurant,
+			'products' => $products
+		]);
     }
 
     /**
