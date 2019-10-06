@@ -39,7 +39,6 @@ const app = new Vue({
 
 $(document).ready(function() {
 	$( "#search" ).autocomplete({
-
 		source: function(request, response) {
 			$.ajax({
 			url: "http://localhost/thuisbezorgd/public/autocomplete",
@@ -50,13 +49,16 @@ $(document).ready(function() {
 			success: function(data){
 			   var resp = $.map(data,function(obj){
 					//console.log(obj.city_name);
-					return obj.name;
+					return {label: obj.name, value: obj.id};
 			   });
-
 			   response(resp);
-			}
+		   },
 		});
 	},
-	minLength: 1
+	minLength: 1,
+	select: function( event, ui ) {
+		window.location.href = "http://localhost/thuisbezorgd/public/restaurants/" + ui.item.value;
+		return false;
+	},
  });
 });

@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
 			$r->city = 'city_'. Str::random(4);
 			$r->phone = rand(1000000000,10000000000);
 			$r->email = $r->name .'@example.com';
+			$r->photo = 'restaurant.jpeg';
+
 
 			$u->restaurants()->save($r);
 

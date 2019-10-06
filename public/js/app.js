@@ -52197,13 +52197,20 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
         success: function success(data) {
           var resp = jquery__WEBPACK_IMPORTED_MODULE_0___default.a.map(data, function (obj) {
             //console.log(obj.city_name);
-            return obj.name;
+            return {
+              label: obj.name,
+              value: obj.id
+            };
           });
           response(resp);
         }
       });
     },
-    minLength: 1
+    minLength: 1,
+    select: function select(event, ui) {
+      window.location.href = "http://localhost/thuisbezorgd/public/restaurants/" + ui.item.value;
+      return false;
+    }
   });
 });
 
