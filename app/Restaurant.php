@@ -21,4 +21,8 @@ class Restaurant extends Model
     {
         return $this->belongsTo('App\User');
     }
+	public function open_hours()
+    {
+        return $this->hasMany('App\Open_hour');
+    }
 }

@@ -6,6 +6,8 @@ use App\Restaurant;
 use App\Product;
 use App\Order;
 use App\Order_product;
+use App\Open_hour;
+
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -42,12 +44,29 @@ class DatabaseSeeder extends Seeder
 
 			$u->restaurants()->save($r);
 
-			for ($j=0; $j < 5; $j++)
+			//make random set of days
+			$random_days = '';
+			for ($q=0; $q < 7; $q++) {
+				if (rand(0,2)) {
+					$random_days .= $q.',';
+				}
+			}
+			$random_days = substr($random_days, 0, -1);
+
+
+			$oh = new Open_hour;
+			$oh->days = $random_days;
+			$oh->start = '08:00:00';
+			$oh->end = '23:00:00';
+
+			$r->open_hours()->save($oh);
+
+			for ($j=0; $j < 15; $j++)
 			{
 				$p = new Product();
 				$p->name = $r->name . '_product_' . rand(0,10);
 				$p->price = rand(1,30). '99';
-				$p->category = rand(1,3);
+				$p->category = rand(0,2);
 				$p->photo = 'product.jpeg';
 
 				$r->products()->save($p);
@@ -66,7 +85,7 @@ class DatabaseSeeder extends Seeder
 		$u->phone = rand(1000000000,10000000000);
 		$u->save();
 
-		$r = Restaurant::find(rand(1,3));
+		$r = Restaurant::find(rand(1,20));
 		$r_products = $r->products;
 
 		$o = new Order;

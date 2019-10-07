@@ -16,7 +16,7 @@ class Product extends Model
 		0 => 'Dranken',
 		1 => 'bijgerechten',
 		2 => 'Hoofdgerechten'
-	]
+	];
 	//get product category by array index ^ see above
 	public function getCategory()
     {

@@ -20,8 +20,51 @@
             </div>
 		</div>
     </div>
+	<hr/>
+	<h4>main courses</h4>
 	<div class="row">
-		@foreach ($products as $p)
+
+		@foreach ($main as $p)
+			<div class="col-md-4 mt-4">
+				<div class="card" style="width: 100%;">
+					<img class="card-img-top" src="{{asset('storage/'.$p->photo)}}" alt="{{$p->name}} photo" >
+					<div class="card-body">
+						<h5 class="card-title">{{$p->name}}</h5>
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">{{$p->price}}</li>
+
+					</ul>
+				</div>
+			</div>
+
+		@endforeach
+	</div>
+	<hr/>
+	<h4>sides</h4>
+	<div class="row">
+
+		@foreach ($sides as $p)
+			<div class="col-md-4 mt-4">
+				<div class="card" style="width: 100%;">
+					<img class="card-img-top" src="{{asset('storage/'.$p->photo)}}" alt="{{$p->name}} photo" >
+					<div class="card-body">
+						<h5 class="card-title">{{$p->name}}</h5>
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">{{$p->price}}</li>
+
+					</ul>
+				</div>
+			</div>
+
+		@endforeach
+	</div>
+	<hr/>
+	<h4>Drinks</h4>
+	<div class="row">
+
+		@foreach ($drinks as $p)
 			<div class="col-md-4 mt-4">
 				<div class="card" style="width: 100%;">
 					<img class="card-img-top" src="{{asset('storage/'.$p->photo)}}" alt="{{$p->name}} photo" >

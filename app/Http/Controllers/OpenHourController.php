@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Restaurant;
-use App\Product;
+use App\Open_hour;
 use Illuminate\Http\Request;
 
-class RestaurantController extends Controller
+class OpenHourController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,18 +14,7 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-		$restaurants = Restaurant::paginate(10);
-        return view('restaurant.index', ['restaurants' => $restaurants]);
-    }
-
-
-	public function search(Request $request)
-    {
-		$search = $request->get('term');
-
-		$result = Restaurant::where('name', 'LIKE', '%'. $search. '%')->get();
-
-		return response()->json($result);
+        //
     }
 
     /**
@@ -53,31 +41,21 @@ class RestaurantController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Restaurant  $restaurant
+     * @param  \App\Open_hour  $open_hour
      * @return \Illuminate\Http\Response
      */
-    public function show(Restaurant $restaurant)
+    public function show(Open_hour $open_hour)
     {
-		$drinks = $restaurant->products->where('category', 0);
-		$sides = $restaurant->products->where('category', 1);
-		$main = $restaurant->products->where('category', 2);
-
-
-        return view('restaurant.view', [
-			'restaurant' => $restaurant,
-			'drinks' => $drinks,
-			'sides' => $sides,
-			'main' => $main
-		]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Restaurant  $restaurant
+     * @param  \App\Open_hour  $open_hour
      * @return \Illuminate\Http\Response
      */
-    public function edit(Restaurant $restaurant)
+    public function edit(Open_hour $open_hour)
     {
         //
     }
@@ -86,10 +64,10 @@ class RestaurantController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Restaurant  $restaurant
+     * @param  \App\Open_hour  $open_hour
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Restaurant $restaurant)
+    public function update(Request $request, Open_hour $open_hour)
     {
         //
     }
@@ -97,10 +75,10 @@ class RestaurantController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Restaurant  $restaurant
+     * @param  \App\Open_hour  $open_hour
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Restaurant $restaurant)
+    public function destroy(Open_hour $open_hour)
     {
         //
     }
