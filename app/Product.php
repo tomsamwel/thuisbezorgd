@@ -3,13 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+	use SoftDeletes;
+
 	//default values
 	protected $attributes = [
         'photo' => 'product.jpeg',
     ];
+
+	protected $fillable = [
+		'name', 'price', 'category', 'restaurant_id'
+	];
+
 
 	//array of categories
 	public static $categories = [

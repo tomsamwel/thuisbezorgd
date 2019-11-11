@@ -33,7 +33,7 @@
 					<div class="card" style="width: 100%;">
 						<img class="card-img-top" src="{{asset('storage/'.$r->photo)}}" alt="{{$r->name}} photo" >
 						<div class="card-body">
-							<h5 class="card-title">{{$r->name}}</h5>
+							<h5 class="card-title">{{$r->name}} - {{ $r->IsOpen ? "Open" : "Closed" }}</h5>
 
 							<a href="{{route("restaurants.show", $r->id)}}" class="btn btn-primary">View restaurant</a>
 						</div>

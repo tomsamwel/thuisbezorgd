@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
 		$u->address = 'zipstreet 420';
 		$u->city = 'Food-town';
 		$u->zipcode = '6969ZI';
+		$u->is_admin = true;
+
 		$u->phone = rand(1000000000,10000000000);
 		$u->save();
 
@@ -40,26 +42,15 @@ class DatabaseSeeder extends Seeder
 			$r->phone = rand(1000000000,10000000000);
 			$r->email = $r->name .'@example.com';
 			$r->photo = 'restaurant.jpeg';
+			$r->open = date('H:i:s', mktime(0, 0,01));
+			$r->close = date('H:i:s', mktime(23, 59,59));
+
+
 
 
 			$u->restaurants()->save($r);
 
-			//make random set of days
-			$random_days = '';
-			for ($q=0; $q < 7; $q++) {
-				if (rand(0,2)) {
-					$random_days .= $q.',';
-				}
-			}
-			$random_days = substr($random_days, 0, -1);
 
-
-			$oh = new Open_hour;
-			$oh->days = $random_days;
-			$oh->start = '08:00:00';
-			$oh->end = '23:00:00';
-
-			$r->open_hours()->save($oh);
 
 			for ($j=0; $j < 15; $j++)
 			{

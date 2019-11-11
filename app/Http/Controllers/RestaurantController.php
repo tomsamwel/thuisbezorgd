@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Restaurant;
 use App\Product;
+use App\Open_hour;
+
 use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
@@ -15,7 +18,9 @@ class RestaurantController extends Controller
      */
     public function index()
     {
+
 		$restaurants = Restaurant::paginate(10);
+
         return view('restaurant.index', ['restaurants' => $restaurants]);
     }
 
@@ -36,7 +41,7 @@ class RestaurantController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -47,7 +52,10 @@ class RestaurantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		Restaurant::create([
+			'user_id' => Auth::user()->id,
+
+		]);
     }
 
     /**
@@ -58,17 +66,17 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
+
 		$drinks = $restaurant->products->where('category', 0);
 		$sides = $restaurant->products->where('category', 1);
 		$main = $restaurant->products->where('category', 2);
-
-
-        return view('restaurant.view', [
-			'restaurant' => $restaurant,
-			'drinks' => $drinks,
+		$categories = [
+			'main' => $main,
 			'sides' => $sides,
-			'main' => $main
-		]);
+			'drinks' => $drinks,
+		];
+
+        return view('restaurant.view', compact('restaurant', 'categories'));
     }
 
     /**

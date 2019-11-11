@@ -62,6 +62,9 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+									<a class="dropdown-item" href="{{ route('users.edit', Auth::id() )}}">
+                                        {{ __('Profile') }}
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -79,11 +82,25 @@
             </div>
         </nav>
 
+		@if ($errors->any())
+			<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">
+				<ul>
+	  				@foreach ($errors->all() as $error)
+	  					<li>{{$error}}</li>
+	  				@endforeach
+  			  	</ul>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		@endif
+
         <main class="py-4">
             @yield('content')
         </main>
     </div>
 
 	@yield('page-js-script')
+	
 </body>
 </html>

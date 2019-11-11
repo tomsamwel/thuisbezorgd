@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Product;
 use Illuminate\Http\Request;
+use App\Restaurant;
 
 class ProductController extends Controller
 {
@@ -22,9 +24,12 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+		$user = Auth::user();
+		$restaurant = Restaurant::findOrFail($request->restaurant_id);
+		$restaurants = $user->restaurants;
+        return view('product.new', compact('restaurant','restaurants'));
     }
 
     /**
@@ -35,7 +40,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		$validated = request()->validate([
+            'name' => ['required'],
+			'category' => ['required','integer'],
+            'price' => ['required','integer'],
+			'restaurant_id' => ['integer']
+        ]);
+		Product::create($validated);
+
+		return redirect(route('restaurants.show', $request->restaurant_id));
     }
 
     /**
@@ -46,7 +59,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return 'no';
     }
 
     /**
@@ -57,7 +70,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('product.edit')->with('product', $product);
     }
 
     /**
@@ -69,7 +82,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+		$validated = request()->validate([
+            'name' => ['required'],
+			'category' => ['required','integer'],
+            'price' => ['required','integer'],
+			'restaurant_id' => ['integer']
+        ]);
+        $product->update($validated);
+		return 'success';
     }
 
     /**
@@ -80,6 +100,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+		$product->delete();
+		return redirect()->back();
     }
 }

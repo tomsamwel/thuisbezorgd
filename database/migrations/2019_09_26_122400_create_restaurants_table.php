@@ -24,6 +24,9 @@ class CreateRestaurantsTable extends Migration
 			$table->bigInteger('phone')->nullable();
 			$table->string('email')->nullable();
 			$table->string('photo')->nullable();
+			$table->time('open')->nullable();
+			$table->time('close')->nullable();
+
 
             $table->timestamps();
         });

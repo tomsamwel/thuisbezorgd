@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'RestaurantController@index');
 
 Auth::routes();
 
@@ -22,3 +20,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('restaurants', 'RestaurantController');
 Route::get('autocomplete', 'RestaurantController@search');
+
+Route::resource('products', 'ProductController');
+Route::resource('users', 'UserController');

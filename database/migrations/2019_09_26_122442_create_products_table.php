@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
 			$table->integer('price');
 			$table->integer('category');
 			$table->string('photo')->nullable();
+			$table->softDeletes();	
             $table->timestamps();
         });
     }

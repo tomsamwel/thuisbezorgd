@@ -54,11 +54,15 @@ $(document).ready(function() {
 			   response(resp);
 		   },
 		});
-	},
-	minLength: 1,
-	select: function( event, ui ) {
-		window.location.href = "http://localhost/thuisbezorgd/public/restaurants/" + ui.item.value;
-		return false;
-	},
- });
+		},
+		minLength: 1,
+		select: function( event, ui ) {
+			window.location.href = "http://localhost/thuisbezorgd/public/restaurants/" + ui.item.value;
+			return false;
+		},
+	});
+
+	$(".delete").on("submit", function(){
+		return confirm("Do you want to delete this item?");
+	});
 });
