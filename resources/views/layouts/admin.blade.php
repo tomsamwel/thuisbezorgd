@@ -39,7 +39,13 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="{{ route('restaurants.index') }}">{{ __('Restaurants') }}</a>
+							<a class="nav-link" href="{{ route('admin.users.index') }}">{{ __('Users') }}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ route('admin.restaurants.index') }}">{{ __('Restaurants') }}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ route('admin.products.index') }}">{{ __('Products') }}</a>
 						</li>
                     </ul>
 
@@ -62,12 +68,6 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-									@if (Auth::user()->is_admin)
-										<a class="dropdown-item" href="{{ route('admin.admin')}}">
-	                                        {{ __('Admin') }}
-	                                    </a>
-									@endif
-
 									<a class="dropdown-item" href="{{ route('users.edit', Auth::id() )}}">
                                         {{ __('Profile') }}
                                     </a>
