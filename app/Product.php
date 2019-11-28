@@ -30,6 +30,14 @@ class Product extends Model
     {
 		return self::$categories[ $this->category ];
     }
+	public function getCategoryNameAttribute()
+    {
+		return self::$categories[ $this->category ];
+    }
+	public function getEurPriceAttribute()
+    {
+		return ("€ ".number_format($this->price/100,2));
+    }
 
 
 	//relations

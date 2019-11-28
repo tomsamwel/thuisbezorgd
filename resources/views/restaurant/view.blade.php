@@ -36,7 +36,7 @@
 							<h5 class="card-title">{{$p->name}}</h5>
 						</div>
 						<ul class="list-group list-group-flush">
-							<li class="list-group-item">{{$p->price}}</li>
+							<li class="list-group-item">{{$p->eurprice}}</li>
 							@if (Auth::id() == $restaurant->user_id)
 								<form class="delete" method="POST" action="{{ route('products.destroy', $p->id) }}">
 									@csrf
@@ -46,6 +46,9 @@
 											<button type="button" class="btn btn-outline-info">edit</button>
 										</a>
 										<button type="submit" class="btn btn-outline-danger">Remove</button>
+										<a href="#">
+											<button type="button" class="btn btn-outline-success">Add to cart</button>
+										</a>
 									</li>
 								</form>
 							@endif

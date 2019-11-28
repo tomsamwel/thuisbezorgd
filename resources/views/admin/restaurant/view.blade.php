@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 
 @section('content')
@@ -36,7 +36,7 @@
 							<h5 class="card-title">{{$p->name}}</h5>
 						</div>
 						<ul class="list-group list-group-flush">
-							<li class="list-group-item">{{$p->price}}</li>
+							<li class="list-group-item">{{$p->eurprice}}</li>
 							@if (Auth::id() == $restaurant->user_id)
 								<form class="delete" method="POST" action="{{ route('products.destroy', $p->id) }}">
 									@csrf

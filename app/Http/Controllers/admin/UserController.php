@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
+
 use Illuminate\Http\Request;
+use App\User;
+
 
 class UserController extends Controller
 {
@@ -14,7 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::paginate(20);
+		return view('admin.user.index', compact('users'));
     }
 
     /**
@@ -55,9 +60,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return view('admin.user.edit', compact('user'));
     }
 
     /**
@@ -67,9 +72,20 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+		$validated = request()->validate([
+			'name' => ['required', 'string', 'max:255'],
+			'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user),],
+			'address' => ['nullable','string', 'max:255',],
+			'zipcode' => ['nullable','string', 'max:255'],
+			'city' => ['nullable','string', 'max:255'],
+			'phone' => ['nullable','string', 'max:50'],
+			'is_admin' => ['nullable','boolean',],
+
+		]);
+		$user->update($validated);
+		return redirect()->back();
     }
 
     /**
@@ -78,8 +94,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+		return redirect()->back();
     }
 }

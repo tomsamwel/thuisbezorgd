@@ -47,59 +47,56 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+	                        @if (Route::has('register'))
+	                        <li class="nav-item">
+	                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+	                        </li>
+	                        @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+								@if (Auth::user()->is_admin)
+									<a class="dropdown-item" href="{{ route('admin.admin')}}">
+                                        {{ __('Admin') }}
+                                    </a>
+								@endif
+								<a class="dropdown-item" href="{{ route('users.orders', Auth::id() )}}">
+                                    {{ __('My Orders') }}
+                                </a>
+								<a class="dropdown-item" href="{{ route('users.edit', Auth::id() )}}">
+                                    {{ __('Profile') }}
+                                </a>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-									@if (Auth::user()->is_admin)
-										<a class="dropdown-item" href="{{ route('admin.admin')}}">
-	                                        {{ __('Admin') }}
-	                                    </a>
-									@endif
-
-									<a class="dropdown-item" href="{{ route('users.edit', Auth::id() )}}">
-                                        {{ __('Profile') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
                         @endguest
+						<li class="nav-item">
+							<a class="btn btn-success btn-sm ml-3" href="cart.html">
+								 Cart
+								<span class="badge badge-light">3</span>
+							</a>
+						</li>
                     </ul>
                 </div>
             </div>
         </nav>
 
-		@if ($errors->any())
-			<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">
-				<ul>
-	  				@foreach ($errors->all() as $error)
-	  					<li>{{$error}}</li>
-	  				@endforeach
-  			  	</ul>
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-		@endif
+		@includeWhen($errors->any(),'partials.errors')
 
         <main class="py-4">
             @yield('content')

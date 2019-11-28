@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
 {
-	protected $attributes = [
+	protected $fillable =
+	[
+		'user_id','kvk','name','address','zipcode','city','phone','email','photo','open','close',
+	];
+
+	protected $attributes =
+	[
         'photo' => 'restaurant.jpeg',
     ];
 
+	public function addProduct($product)
+	{
+		$this->products()->create($product);
+	}
 
 	public function getIsOpenAttribute()
     {
@@ -34,7 +44,7 @@ class Restaurant extends Model
     {
         return $this->belongsTo('App\User');
     }
-	
+
 	public function open_hours()
     {
         return $this->hasMany('App\Open_hour');

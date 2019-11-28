@@ -15,7 +15,7 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-		$restaurants = Restaurant::paginate(20);
+		$restaurants = Restaurant::paginate(10);
         return view('admin.restaurant.index', compact('restaurants'));
     }
 
@@ -46,9 +46,8 @@ class RestaurantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Restaurant $restaurant)
     {
-        //
     }
 
     /**
@@ -57,9 +56,9 @@ class RestaurantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Restaurant $restaurant)
     {
-        //
+		return view('admin.restaurant.edit', compact('restaurant'));
     }
 
     /**
@@ -69,9 +68,23 @@ class RestaurantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Restaurant $restaurant)
     {
-        //
+		$validated = request()->validate([
+			'user_id' => ['required', 'integer'],
+            'name' => ['required'],
+			'kvk' => ['required','integer'],
+            'address' => [''],
+			'zipcode' => [''],
+			'city' => [''],
+			'phone' => ['integer'],
+			'email' => ['required','email'],
+			'open' => ['required',''],
+			'close' => ['required',''],
+
+        ]);
+        $restaurant->update($validated);
+		return redirect()->back();
     }
 
     /**
@@ -80,8 +93,9 @@ class RestaurantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Restaurant $restaurant)
     {
-        //
+        $restaurant->delete();
+		return redirect()->back();
     }
 }

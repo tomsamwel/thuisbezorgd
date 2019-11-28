@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Product;
 
 class ProductController extends Controller
 {
@@ -14,7 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+		$products = Product::paginate(20);
+        return view('admin.product.index', compact('products'));
     }
 
     /**
@@ -55,9 +57,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        return view('admin.product.edit', compact('product'));
     }
 
     /**
@@ -67,9 +69,16 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        //
+		$validated = request()->validate([
+            'name' => ['required'],
+			'category' => ['required','integer'],
+            'price' => ['required','integer'],
+			'restaurant_id' => ['integer']
+        ]);
+        $product->update($validated);
+		return redirect()->back();
     }
 
     /**
@@ -78,8 +87,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        $product->delete();
+		return redirect()->back();
     }
 }

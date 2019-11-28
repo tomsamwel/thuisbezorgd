@@ -95,4 +95,13 @@ class UserController extends Controller
     {
         //
     }
+
+	public function orders(User $user)
+    {
+		if (Auth::id() === $user->id) {
+			$orders = $user->orders()->with(['restaurant','order_products.product'])->get();
+
+        	return view('user.orders', compact('orders'));
+        }
+    }
 }

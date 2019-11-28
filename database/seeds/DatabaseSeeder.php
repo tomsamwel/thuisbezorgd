@@ -88,9 +88,24 @@ class DatabaseSeeder extends Seeder
 			if (rand(0,1) == 1) {
 				$o_p = new Order_product;
 				$o_p->product_id = $r_product->id;
-				$o_p->quantity = rand(1,2);
+				$o_p->quantity = rand(1,3);
 				$o_p->price = $r_product->price;
-				$o->products()->save($o_p);
+				$o->order_products()->save($o_p);
+			}
+
+		}
+		$o = new Order;
+		$o->restaurant_id = $r->id;
+
+		$u->orders()->save($o);
+
+		foreach ($r_products as $r_product) {
+			if (rand(0,1) == 1) {
+				$o_p = new Order_product;
+				$o_p->product_id = $r_product->id;
+				$o_p->quantity = rand(1,3);
+				$o_p->price = $r_product->price;
+				$o->order_products()->save($o_p);
 			}
 
 		}

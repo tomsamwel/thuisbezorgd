@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Product;
-use Illuminate\Http\Request;
 use App\Restaurant;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -40,15 +40,17 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-		$validated = request()->validate([
+		$restaurant = Restaurant::findOrFail($request->restaurant_id);
+
+		$validated_product = request()->validate([
             'name' => ['required'],
 			'category' => ['required','integer'],
             'price' => ['required','integer'],
-			'restaurant_id' => ['integer']
         ]);
-		Product::create($validated);
 
-		return redirect(route('restaurants.show', $request->restaurant_id));
+		$restaurant->addProduct($validated_product);
+
+		return redirect(route('restaurants.show', $restaurant->id));
     }
 
     /**
@@ -59,7 +61,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return 'no';
+        return $product;
     }
 
     /**
@@ -89,7 +91,7 @@ class ProductController extends Controller
 			'restaurant_id' => ['integer']
         ]);
         $product->update($validated);
-		return 'success';
+		return redirect()->back();
     }
 
     /**
