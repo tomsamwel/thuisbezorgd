@@ -13,6 +13,39 @@ window.$ = window.jQuery = $;
 
 import 'jquery-ui/ui/widgets/autocomplete.js';
 
+
+var products = [
+	{
+		id : 1,
+		name : "product_1",
+		price : 199,
+		quantity : 1,
+	},
+	{
+		id : 2,
+		name : "product_2",
+		price : 299,
+		quantity : 2,
+	},
+	{
+		id : 3,
+		name : "product_3",
+		price : 599,
+		quantity : 3,
+	}
+];
+//Save data to sessionStorage
+sessionStorage.setItem('products', JSON.stringify(products));
+
+// Get saved data from sessionStorage
+// var products = sessionStorage.getItem('products');
+// console.log(products);
+// console.log(JSON.parse(products));
+// Remove saved data from sessionStorage
+// sessionStorage.removeItem('products');
+
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -21,10 +54,12 @@ import 'jquery-ui/ui/widgets/autocomplete.js';
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+const files = require.context('./', true, /\.vue$/i)
+files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+// Vue.component('CartTable', require('./components/CartTable.vue').default);
+// Vue.component('CartRow', require('./components/CartRow.vue').default);
+// Vue.component('CartAdd', require('./components/CartAdd.vue').default);
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -34,10 +69,28 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+	data : {
+		products : [
+			{
+				id : 1,
+				name : "product_1",
+				price : 199,
+				quantity : 1,
+			},
+			{
+				id : 1,
+				name : "product_2",
+				price : 299,
+				quantity : 2,
+			},
+		]
+	},
 });
 
 
 $(document).ready(function() {
+
+	//autocomplete search ajax
 	$( "#search" ).autocomplete({
 		source: function(request, response) {
 			$.ajax({
@@ -62,6 +115,7 @@ $(document).ready(function() {
 		},
 	});
 
+	//tiny script to prompt deletes
 	$(".delete").on("submit", function(){
 		return confirm("Do you want to delete this item?");
 	});
