@@ -16,11 +16,22 @@ class Restaurant extends Model
         'photo' => 'restaurant.jpeg',
     ];
 
+	//add a product to restaurant. expects validated product
 	public function addProduct($product)
 	{
-		$this->products()->create($product);
+		try
+		{
+			$this->products()->create($product);
+			return 1;
+		}
+		catch (\Exception $e)
+		{
+			return 0;
+		}
+
 	}
 
+	//
 	public function getIsOpenAttribute()
     {
 		$time = date('H:i:s');
@@ -30,6 +41,7 @@ class Restaurant extends Model
 		return 0;
     }
 
+	//relations defined below
 	public function products()
     {
         return $this->hasMany('App\Product');

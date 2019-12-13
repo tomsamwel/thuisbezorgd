@@ -1875,6 +1875,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1882,33 +1899,166 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      products: JSON.parse(sessionStorage.getItem('products'))
+      products: [],
+      example_products: [{
+        id: 1,
+        name: "example_product_1",
+        price: 199,
+        quantity: 1
+      }, {
+        id: 2,
+        name: "example_product_2",
+        price: 299,
+        quantity: 2
+      }]
     };
   },
+  watch: {
+    // whenever products changes, this function will run and update it in the session via axios
+    products: function products(newProducts, oldProducts) {
+      axios.post(APP_URL + '/session/products', {
+        products: JSON.stringify(this.products)
+      }).then(function (response) {
+        console.log('updated products in the session');
+      })["catch"](function (error) {
+        console.log('failed to update products in the session');
+        console.log(error);
+      });
+    }
+  },
   methods: {
-    add: function add(product) {
-      var quantity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+    //add a new product to cart
+    addToCart: function addToCart(product) {
+      console.log(product); //check wether the product id already exists in the cart
+      //if so then increment quantity
+
+      if (this.products.length >= 1) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = this.products[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var existing_product = _step.value;
+
+            if (existing_product.id === product.id) {
+              console.log('product already in cart. adding 1 more');
+              existing_product.quantity++;
+              product = null;
+              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      } //push new product to cart array
+
+
+      if (product) {
+        console.log(product);
+        console.log(this.products);
+        this.products.push(product);
+      } //because increment doesn't trigger vue updates I will trigger it by sorting the array
+
+
+      this.products.sort();
+    },
+    //add quantity of a product
+    add: function add(product, index) {
+      var quantity = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
       product.quantity = product.quantity + quantity;
+      Vue.set(this.products, index, product);
+      console.log(this.products);
     },
-    subtract: function subtract(product) {
-      var quantity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+    //subtract from cart
+    subtract: function subtract(product, index) {
+      var quantity = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 
-      if (product.quantity === 1) {}
-
-      product.quantity = product.quantity - quantity;
+      if (product.quantity === 1) {
+        this.products.splice(index, 1);
+      } else {
+        product.quantity = product.quantity - quantity;
+        Vue.set(this.products, index, product);
+      }
     },
+    //calculate total
     productTotal: function productTotal(product) {
       return product.quantity * product.price;
+    },
+    order: function order() {
+      if (this.products.length >= 1) {
+        axios.post(APP_URL + '/order', {
+          products: JSON.stringify(this.products),
+          restaurant_id: RESTAURANT_ID
+        }).then(function (response) {
+          return console.log(response);
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+        this.products.splice(0, this.products.length);
+        $("#checkout").html("succesfully ordered");
+      }
+    },
+    exampleProducts: function exampleProducts() {
+      this.products.length >= 1;
     }
   },
   computed: {
+    //loop over all the products and quantities in the cart to calculate subtotal
     subtotal: function subtotal() {
-      this.products.forEach();
+      if (this.products.length >= 1) {
+        var subtotal = 0;
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = this.products[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var product = _step2.value;
+            subtotal += product.quantity * product.price;
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        ;
+        return subtotal;
+      }
     }
   },
   mounted: function mounted() {
+    var _this = this;
+
+    axios.get(APP_URL + '/session/products').then(function (response) {
+      if (response.data.length >= 1) {
+        _this.products = response.data;
+      } else {
+        _this.products = _this.example_products;
+      }
+    });
     console.log('Cart component mounted.');
-    console.log('products in session found: ' + JSON.stringify(this.products));
   }
 });
 
@@ -1923,18 +2073,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -40189,82 +40327,164 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c(
-          "table",
-          { staticClass: "table table-sm table-hover table-striped" },
-          [
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "cartModal",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "cartModal",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "modal-dialog modal-dialog-scrollable",
+          attrs: { role: "document" }
+        },
+        [
+          _c("div", { staticClass: "modal-content" }, [
             _vm._m(0),
             _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.products, function(product) {
-                return _c("tr", { key: product.id }, [
-                  _c("td", [_vm._v(_vm._s(product.id))]),
+            _c("div", { staticClass: "modal-body" }, [
+              _c(
+                "table",
+                { staticClass: "table table-sm table-hover table-borderless" },
+                [
+                  _vm._m(1),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(product.name))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(product.price))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-sm btn-danger",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.subtract(product)
-                          }
-                        }
-                      },
-                      [_vm._v("-")]
-                    ),
-                    _vm._v(
-                      "\n\t\t\t\t\t\t\t\t" +
-                        _vm._s(product.quantity) +
-                        "\n\t\t\t\t\t\t\t\t"
-                    ),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-sm btn-success",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.add(product)
-                          }
-                        }
-                      },
-                      [_vm._v("+")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _vm._v(
-                      "\n\t\t\t\t\t\t\t\t" +
-                        _vm._s(_vm.productTotal(product)) +
-                        "\n\t\t\t\t\t\t\t"
-                    )
-                  ])
-                ])
-              }),
-              0
-            )
-          ]
-        )
-      ])
-    ])
-  ])
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.products, function(product, index) {
+                        return _c("tr", { key: product.id }, [
+                          _c("td", [_vm._v(_vm._s(product.id))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(product.name))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(product.price))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-danger",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.subtract(product, index)
+                                  }
+                                }
+                              },
+                              [_vm._v("-")]
+                            ),
+                            _vm._v(" "),
+                            _c("b", [_vm._v(_vm._s(product.quantity))]),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-success",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.add(product, index)
+                                  }
+                                }
+                              },
+                              [_vm._v("+")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n\t\t\t\t\t  " +
+                                _vm._s(_vm.productTotal(product)) +
+                                "\n\t\t\t\t  "
+                            )
+                          ])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", { staticClass: " border-top" }, [
+                        _c("td", { attrs: { colspan: "4" } }, [
+                          _vm._v("subtotal: ")
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(_vm.subtotal))])
+                      ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("Continue shopping")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { id: "checkout", type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.order()
+                    }
+                  }
+                },
+                [_vm._v("Checkout")]
+              )
+            ])
+          ])
+        ]
+      )
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "thead-dark" }, [
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "cartModalTitle" } },
+        [_vm._v("Cart")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", {}, [
       _c("tr", [
         _c("th", {}, [_vm._v("ID")]),
         _vm._v(" "),
@@ -40300,32 +40520,13 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "button",
+    { staticClass: "btn btn-outline-success", attrs: { type: "button" } },
+    [_vm._v("Add to cart")]
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -52589,15 +52790,12 @@ var products = [{
   name: "product_3",
   price: 599,
   quantity: 3
-}]; //Save data to sessionStorage
-
-sessionStorage.setItem('products', JSON.stringify(products)); // Get saved data from sessionStorage
-// var products = sessionStorage.getItem('products');
-// console.log(products);
-// console.log(JSON.parse(products));
-// Remove saved data from sessionStorage
-// sessionStorage.removeItem('products');
-
+}, {
+  id: 4,
+  name: "product_4",
+  price: 120,
+  quantity: 4
+}];
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -52622,19 +52820,7 @@ files.keys().map(function (key) {
 
 var app = new Vue({
   el: '#app',
-  data: {
-    products: [{
-      id: 1,
-      name: "product_1",
-      price: 199,
-      quantity: 1
-    }, {
-      id: 1,
-      name: "product_2",
-      price: 299,
-      quantity: 2
-    }]
-  }
+  data: {}
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
   //autocomplete search ajax
@@ -52734,14 +52920,15 @@ if (token) {
 /*!******************************************!*\
   !*** ./resources/js/components/Cart.vue ***!
   \******************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Cart_vue_vue_type_template_id_b7f93bea___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Cart.vue?vue&type=template&id=b7f93bea& */ "./resources/js/components/Cart.vue?vue&type=template&id=b7f93bea&");
 /* harmony import */ var _Cart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Cart.vue?vue&type=script&lang=js& */ "./resources/js/components/Cart.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Cart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Cart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -52771,7 +52958,7 @@ component.options.__file = "resources/js/components/Cart.vue"
 /*!*******************************************************************!*\
   !*** ./resources/js/components/Cart.vue?vue&type=script&lang=js& ***!
   \*******************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -16,3 +16,13 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// Route::group(['middleware' => ['web']], function () {
+// 	Route::get('/session/products', 'SessionController@products');
+//
+// 	Route::post('/session/products', 'SessionController@storeProducts');
+//
+// 	// Route::get('/session/{key}', 'SessionController@store');
+//
+// });

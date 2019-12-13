@@ -66,7 +66,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-
+		
 		$drinks = $restaurant->products->where('category', 0);
 		$sides = $restaurant->products->where('category', 1);
 		$main = $restaurant->products->where('category', 2);

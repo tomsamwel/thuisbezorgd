@@ -86,10 +86,9 @@
                         </li>
                         @endguest
 						<li class="nav-item">
-							<a class="btn btn-success btn-sm ml-3" href="cart.html">
-								 Cart
-								<span class="badge badge-light">3</span>
-							</a>
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cartModal">
+							  Cart
+							</button>
 						</li>
                     </ul>
                 </div>
@@ -97,13 +96,16 @@
         </nav>
 
 		@includeWhen($errors->any(),'partials.errors')
-		
+		@include('partials.cart')
+
         <main class="py-4">
             @yield('content')
         </main>
     </div>
 
 	@yield('page-js-script')
-
+	<script type="text/javascript">
+		var APP_URL = {!! json_encode(url('/')) !!}
+	</script>
 </body>
 </html>

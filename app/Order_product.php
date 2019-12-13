@@ -10,7 +10,7 @@ class Order_product extends Model
     {
 		return ("€ ".number_format($this->price/100,2));
     }
-	public function Order()
+	public function order()
     {
         return $this->belongsTo('App\Order');
     }

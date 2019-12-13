@@ -25,3 +25,8 @@ Route::get('autocomplete', 'RestaurantController@search');
 Route::resource('products', 'ProductController');
 Route::resource('users', 'UserController');
 Route::get('users/{user}/orders', 'UserController@orders')->name('users.orders');
+
+Route::post('/order','OrderController@store')->name('orders.store');
+
+Route::get('/session/products', 'SessionController@products');
+Route::post('/session/products', 'SessionController@storeProducts');

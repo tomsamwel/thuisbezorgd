@@ -14,6 +14,7 @@ window.$ = window.jQuery = $;
 import 'jquery-ui/ui/widgets/autocomplete.js';
 
 
+
 var products = [
 	{
 		id : 1,
@@ -32,19 +33,14 @@ var products = [
 		name : "product_3",
 		price : 599,
 		quantity : 3,
+	},
+	{
+		id : 4,
+		name : "product_4",
+		price : 120,
+		quantity : 4,
 	}
 ];
-//Save data to sessionStorage
-sessionStorage.setItem('products', JSON.stringify(products));
-
-// Get saved data from sessionStorage
-// var products = sessionStorage.getItem('products');
-// console.log(products);
-// console.log(JSON.parse(products));
-// Remove saved data from sessionStorage
-// sessionStorage.removeItem('products');
-
-
 
 /**
  * The following block of code may be used to automatically register your
@@ -70,20 +66,7 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 const app = new Vue({
     el: '#app',
 	data : {
-		products : [
-			{
-				id : 1,
-				name : "product_1",
-				price : 199,
-				quantity : 1,
-			},
-			{
-				id : 1,
-				name : "product_2",
-				price : 299,
-				quantity : 2,
-			},
-		]
+
 	},
 });
 

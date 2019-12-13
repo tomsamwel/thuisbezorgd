@@ -2,7 +2,6 @@
 
 
 @section('content')
-<cart></cart>
 <div class="container ">
     <div class="row justify-content-md-center">
 		<div class="col-md-auto mt-4">
@@ -23,34 +22,50 @@
             </div>
 		</div>
     </div>
-	@foreach ($categories as $name => $c)
+	@foreach ($categories as $name => $category)
 		<hr/>
 		<h4 class="row justify-content-md-center">{{ $name }}</h4>
 		<div class="row">
 
-			@foreach ($c as $p)
-				<div class="col-md-4 mt-4">
+			@foreach ($category as $product)
+				<div class="col-md-3 mt-4">
 					<div class="card" style="width: 100%;">
-						<img class="card-img-top" src="{{asset('storage/'.$p->photo)}}" alt="{{$p->name}} photo" >
+						<img class="card-img-top" src="{{asset('storage/'.$product->photo)}}" alt="{{$product->name}} photo" >
 						<div class="card-body">
-							<h5 class="card-title">{{$p->name}}</h5>
+							<h5 class="card-title">{{$product->name}}</h5>
 						</div>
 						<ul class="list-group list-group-flush">
-							<li class="list-group-item">{{$p->eurprice}}</li>
+							<li class="list-group-item">{{$product->eurprice}}</li>
 							@if (Auth::id() == $restaurant->user_id)
-								<form class="delete" method="POST" action="{{ route('products.destroy', $p->id) }}">
+								<form class="delete" method="POST" action="{{ route('products.destroy', $product->id) }}">
 									@csrf
 									@method('DELETE')
 									<li class="list-group-item">
-										<a href="{{route('products.edit', $p->id)}}">
+										<a href="{{route('products.edit', $product->id)}}">
 											<button type="button" class="btn btn-outline-info">edit</button>
 										</a>
 										<button type="submit" class="btn btn-outline-danger">Remove</button>
-										<a href="#">
-											<button type="button" class="btn btn-outline-success">Add to cart</button>
-										</a>
+
+
+
 									</li>
 								</form>
+							@endif
+							@if ($restaurant->IsOpen == true)
+								<li class="list-group-item">
+									<button
+										v-on:click="$refs.cart.addToCart({
+											id : {{$product->id}},
+											name : '{{$product->name}}',
+											price : {{$product->price}} ,
+											quantity : 1,
+										})"
+										type="button"
+										class="btn btn-outline-success">
+										Add to cart
+									</button>
+								</li>
+
 							@endif
 
 						</ul>
@@ -61,4 +76,11 @@
 	@endforeach
 
 </div>
+
+
+@endsection
+@section('page-js-script')
+	<script type="text/javascript">
+		var RESTAURANT_ID = {{$restaurant->id}};
+	</script>
 @endsection
