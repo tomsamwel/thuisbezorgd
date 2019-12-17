@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
+use Image;
 
 class ProductController extends Controller
 {
@@ -71,13 +72,28 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-		$validated = request()->validate([
+		$validated_product = request()->validate([
             'name' => ['required'],
 			'category' => ['required','integer'],
             'price' => ['required','integer'],
-			'restaurant_id' => ['integer']
+			'restaurant_id' => ['integer'],
+			'photo' => ['file','image','mimes:jpg,jpeg,png,gif','max:4096'],
         ]);
-        $product->update($validated);
+		// Check if a profile image has been uploaded
+		if ($request->has('photo')) {
+			// Get image file original extension
+			$imgExtension = $request->file('photo')->getClientOriginalExtension();
+			// Intervention image cropping
+			$image = Image::make($request->file('photo'))->fit(500);
+			// Make a image name based on user id and unique id
+			$name = uniqid($product->name.'_');
+			// Upload image with original extension
+			$storedImage = $image->save('storage/uploads/images/'.$name.'.'.$imgExtension, 100);
+			// Set user profile image path in database to filePath
+			$validated_product['photo'] = $name.'.'.$imgExtension;
+		}
+
+        $product->update($validated_product);
 		return redirect()->back();
     }
 

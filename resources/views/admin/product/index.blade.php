@@ -13,6 +13,7 @@
 							<th class="">ID</th>
 							<th class="">restaurant ID</th>
 							<th class="">name</th>
+							<th class="">photo</th>
 							<th class="">price</th>
 							<th class="">category</th>
 							<th class=""></th>
@@ -24,6 +25,7 @@
 							<td>{{$product->id}}</td>
 							<td>{{$product->restaurant_id}}</td>
 							<td>{{$product->name}}</td>
+							<td><img src="{{asset('storage/uploads/images/'.$product->photo)}}" width="40" height="40"/></td>
 							<td>{{$product->price}}</td>
 							<td>{{$product->category}}</td>
 							<td>

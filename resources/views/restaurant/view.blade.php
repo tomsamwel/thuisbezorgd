@@ -9,9 +9,11 @@
 				<img class="card-img-top" src="{{asset('storage/'.$restaurant->photo)}}" alt="{{$restaurant->name}} photo" >
 				<div class="card-body">
 					<h5 class="card-title">{{$restaurant->name}} - {{ $restaurant->IsOpen ? "Open" : "Closed" }}</h5>
-					<a href="{{route('products.create', 'restaurant_id='.$restaurant->id)}}">
-						<button type="button" class="btn btn-outline-info">Add product</button>
-					</a>
+					@if (Auth::id() == $restaurant->user_id)
+						<a href="{{route('products.create', 'restaurant_id='.$restaurant->id)}}">
+							<button type="button" class="btn btn-outline-info">Add product</button>
+						</a>
+					@endif
 				</div>
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">{{$restaurant->city}}</li>
@@ -30,7 +32,7 @@
 			@foreach ($category as $product)
 				<div class="col-md-3 mt-4">
 					<div class="card" style="width: 100%;">
-						<img class="card-img-top" src="{{asset('storage/'.$product->photo)}}" alt="{{$product->name}} photo" >
+						<img class="card-img-top" src="{{asset('storage/uploads/images/'.$product->photo)}}" alt="{{$product->name}} photo" >
 						<div class="card-body">
 							<h5 class="card-title">{{$product->name}}</h5>
 						</div>
